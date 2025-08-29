@@ -2,7 +2,7 @@ name: Continuous Integration / Continuous Delivery
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "main" ]
 
 permissions:
   contents: read
@@ -26,3 +26,4 @@ jobs:
         working-directory: src
 
         run: pytest tests.py
+
