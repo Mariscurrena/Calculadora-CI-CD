@@ -30,13 +30,6 @@ jobs:
         working-directory: src
         run: ruff check .
 
-  SAST:
-    needs: ci
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install Dependencies
-        run: pip install -r src/requirements.txt
-        
       - name: Check Bandit Version
         run: bandit --version
 
