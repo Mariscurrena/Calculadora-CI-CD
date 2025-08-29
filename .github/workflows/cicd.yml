@@ -30,3 +30,16 @@ jobs:
         working-directory: src
         run: ruff check .
 
+  SAST:
+    needs: ci
+    runs-on: ubuntu-latest
+    steps:
+      - name: Security Compliance using Bandit
+        run: |
+          bandit -r . > bandit_output.txt
+          if grep -q "Severity: HIGH" bandit_output.txt; then
+            echo "High severity issues found!"
+            cat bandit_output.txt
+            exit 1
+          fi
+          echo "Security matches the criteria"
