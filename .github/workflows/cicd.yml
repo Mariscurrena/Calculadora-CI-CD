@@ -22,8 +22,11 @@ jobs:
       - name: Install Dependencies
         run: pip install -r src/requirements.txt
 
-      - name: Test with pytest
+      - name: Test with pytest ### Unitests
         working-directory: src
-
         run: pytest tests.py
+
+      - name: Check linting ### Quality test
+        working-directory: src
+        run: ruff check .
 

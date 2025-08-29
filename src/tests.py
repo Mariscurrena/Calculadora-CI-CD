@@ -2,7 +2,7 @@ import pytest
 from io import StringIO
 import sys
 
-from main import add_numbers, rest_numbers, mult_numbers, div_numbers, main
+from main import add_numbers, rest_numbers, mult_numbers, div_numbers
 
 def mock_input(mock_inputs):
     original_input = sys.stdin
