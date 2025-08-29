@@ -42,3 +42,33 @@ jobs:
             exit 1  # Falla solo en HIGH severity
           fi
           echo "Security matches the criteria"
+  
+  SCA:
+    needs: ci
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install OWASP Dependency-Check
+        run: |
+          pip install dependency-check
+
+      - name: Run Dependency-Check
+        run: |
+          dependency-check --project MyProject --scan ./src --format HTML --out ./dependency-check-report
+
+      - name: Upload Dependency-Check Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: dependency-check-report
+          path: ./dependency-check-report/*.html
+
+      - name: Check for Vulnerabilities (HIGH Severity)
+        run: |
+          if grep -q "HIGH" ./dependency-check-report/*; then
+            echo "High severity vulnerabilities found!"
+            exit 1
+          else
+            echo "No high severity vulnerabilities found."
+          fi
