@@ -34,6 +34,9 @@ jobs:
     needs: ci
     runs-on: ubuntu-latest
     steps:
+      - name: Check Bandit Version
+        run: bandit --version
+        
       - name: Security Compliance using Bandit
         run: |
           bandit -r . > bandit_output.txt
