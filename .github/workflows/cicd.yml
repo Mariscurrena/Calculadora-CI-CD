@@ -68,7 +68,7 @@ jobs:
           dependency-check --project MyProject --scan ./src --format HTML --out ./dependency-check-report
 
       - name: Upload Dependency-Check Report
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: dependency-check-report
           path: ./dependency-check-report/*.html
