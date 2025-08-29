@@ -30,8 +30,17 @@ jobs:
         working-directory: src
         run: ruff check .
 
+  SAST:
+    needs: ci
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
       - name: Check Bandit Version
-        run: bandit --version
+        run: |
+          pip install bandit
+          bandit --version
 
       - name: Security Compliance using Bandit
         run: |
@@ -44,7 +53,7 @@ jobs:
           echo "Security matches the criteria"
   
   SCA:
-    needs: ci
+    needs: SAST
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -59,7 +68,7 @@ jobs:
           dependency-check --project MyProject --scan ./src --format HTML --out ./dependency-check-report
 
       - name: Upload Dependency-Check Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: dependency-check-report
           path: ./dependency-check-report/*.html
