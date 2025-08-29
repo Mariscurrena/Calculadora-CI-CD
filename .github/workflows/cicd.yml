@@ -35,10 +35,10 @@ jobs:
 
       - name: Security Compliance using Bandit
         run: |
-          bandit -r . > bandit_output.txt
+          bandit -r . -ll > bandit_output.txt 
           if grep -q "Severity: HIGH" bandit_output.txt; then
             echo "High severity issues found!"
             cat bandit_output.txt
-            exit 1
+            exit 1  # Falla solo en HIGH severity
           fi
           echo "Security matches the criteria"
