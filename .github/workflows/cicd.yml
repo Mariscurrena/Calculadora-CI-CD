@@ -68,4 +68,4 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ghcr.io/Mariscurrena/Calculadora-CI-CD:latest
+          tags: ghcr.io/mariscurrena/calculadora-ci-cd:latest
