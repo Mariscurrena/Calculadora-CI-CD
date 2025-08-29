@@ -13,3 +13,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Set Up Python 3.11
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.11"
+      
+      - name: Install Dependencies
+        run: pip install -r src/requirements.txt
+
+      - name: Test with pytest
+        working-directory: src
+        run: pytest tests.py
