@@ -21,7 +21,13 @@ jobs:
           python-version: "3.11"
       
       - name: Install Dependencies
-        run: pip install -r src/requirements.txt
+        run: |
+          if [ -f src/requirements.txt ]; then
+            pip install -r src/requirements.txt
+          else
+            echo "No requirements.txt found"
+            exit 1
+          fi
 
       - name: Test with pytest ### Unitests
         working-directory: src
@@ -44,6 +50,7 @@ jobs:
           bandit --version
 
       - name: Security Compliance using Bandit
+        working-directory: src
         run: |
           bandit -r . -ll > bandit_output.txt 
           if grep -q "Severity: HIGH" bandit_output.txt; then
@@ -60,31 +67,25 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Install Trivy
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: 'fs'
-          scan-ref: './src'
-          vuln-type: 'pip'
-          severity: 'HIGH,CRITICAL'
-          exit-code: '1'
-          ignore-unfixed: true
+      - name: Install Trivy CLI
+        run: |
+          wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.51.1_Linux-64bit.deb
+          sudo dpkg -i trivy_0.51.1_Linux-64bit.deb
 
-      - name: Software Composition ANalysis
+      - name: Software Composition Analysis
         run: |
           if [ -f src/requirements.txt ]; then
             trivy fs \
               --security-checks vuln \
-              --vuln-type pip \
+              --pkg-types library \
               --severity HIGH,CRITICAL \
-              --exit-code 1 \
               --ignore-unfixed \
+              --exit-code 1 \
               src/
           else
             echo "No requirements.txt found"
             exit 1
           fi
-
 
   CD:
     needs: SCA
