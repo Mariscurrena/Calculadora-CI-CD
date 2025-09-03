@@ -67,25 +67,15 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Install Trivy CLI
-        run: |
-          wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_Linux-64bit.deb
-          sudo dpkg -i trivy_0.51.1_Linux-64bit.deb
-
-      - name: Software Composition Analysis
-        run: |
-          if [ -f src/requirements.txt ]; then
-            trivy fs \
-              --security-checks vuln \
-              --pkg-types library \
-              --severity HIGH,CRITICAL \
-              --ignore-unfixed \
-              --exit-code 1 \
-              src/
-          else
-            echo "No requirements.txt found"
-            exit 1
-          fi
+      - name: Software Composition Analysis with Trivy
+        uses: aquasecurity/trivy-action@v0.12.7
+        with:
+          scan-type: fs
+          scan-ref: ./src
+          vuln-type: library
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '1'
 
   CD:
     needs: SCA
