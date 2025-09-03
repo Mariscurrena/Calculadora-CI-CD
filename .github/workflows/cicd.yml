@@ -63,7 +63,12 @@ jobs:
       - name: Install Trivy
         uses: aquasecurity/trivy-action@master
         with:
-          version: latest
+          scan-type: 'fs'
+          scan-ref: './src'
+          vuln-type: 'pip'
+          severity: 'HIGH,CRITICAL'
+          exit-code: '1'
+          ignore-unfixed: true
 
       - name: Software Composition ANalysis
         run: |
