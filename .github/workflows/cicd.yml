@@ -68,7 +68,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Software Composition Analysis with Trivy
-        uses: aquasecurity/trivy-action@v0.12.7
+        uses: aquasecurity/trivy-action@0.28.0
         with:
           scan-type: fs
           scan-ref: ./src
