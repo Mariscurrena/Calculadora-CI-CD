@@ -40,7 +40,7 @@ jobs:
 
       - name: Check Bandit Version
         run: |
-          pip install bandit
+          pip install bandit==1.8.6
           bandit --version
 
       - name: Security Compliance using Bandit
@@ -49,12 +49,40 @@ jobs:
           if grep -q "Severity: HIGH" bandit_output.txt; then
             echo "High severity issues found!"
             cat bandit_output.txt
-            exit 1  # Falla solo en HIGH severity
+            exit 1
           fi
           echo "Security matches the criteria"
   
-  CD:
+  SCA:
     needs: SAST
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          version: latest
+
+      - name: Software Composition ANalysis
+        run: |
+          if [ -f src/requirements.txt ]; then
+            trivy fs \
+              --security-checks vuln \
+              --vuln-type pip \
+              --severity HIGH,CRITICAL \
+              --exit-code 1 \
+              --ignore-unfixed \
+              src/
+          else
+            echo "No requirements.txt found"
+            exit 1
+          fi
+
+
+  CD:
+    needs: SCA
     runs-on: ubuntu-latest
     steps:
       - name: Login to GitHub Container Registry

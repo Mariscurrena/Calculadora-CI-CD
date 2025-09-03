@@ -1,5 +1,5 @@
-pytest==8.3.4
+pytest==8.4.1
 ruff==0.8.1
-bandit==1.7.4
+bandit==1.7.4#Vuln #bandit==1.8.6
 pbr==5.10.0
 setuptools==65.5.0
