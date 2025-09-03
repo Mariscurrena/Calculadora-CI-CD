@@ -61,7 +61,7 @@ jobs:
           echo "Security matches the criteria"
   
   SCA:
-    needs: SAST
+    needs: CI
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -78,7 +78,7 @@ jobs:
           exit-code: '1'
 
   CD:
-    needs: SCA
+    needs: [SAST, SCA]
     runs-on: ubuntu-latest
     steps:
       - name: Login to GitHub Container Registry
